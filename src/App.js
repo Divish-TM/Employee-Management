@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import EmployeeForm from './components/EmployeeForm';
+import EmployeeTable from './components/EmployeeTable';
+import { Container, Typography } from '@mui/material';
 
 function App() {
+  const [employees, setEmployees] = useState([]);
+
+  const addEmployee = (employee) => {
+    setEmployees([
+      ...employees,
+      { ...employee, id: Date.now() }, // Assign a unique ID to each employee
+    ]);
+  };
+
+  const editEmployee = (id, updatedEmployee) => {
+    setEmployees(
+      employees.map((emp) => (emp.id === id ? { ...emp, ...updatedEmployee } : emp))
+    );
+  };
+
+  const deleteEmployee = (id) => {
+    setEmployees(employees.filter((emp) => emp.id !== id));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="md" sx={{ marginTop: 4 }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        Employee Management System
+      </Typography>
+      <EmployeeForm addEmployee={addEmployee} />
+      <EmployeeTable
+        employees={employees}
+        editEmployee={editEmployee}
+        deleteEmployee={deleteEmployee}
+      />
+    </Container>
   );
 }
 
